@@ -37,31 +37,19 @@ class SQLStatement:
 	- Auto-capitalise keyword argument variable names (select > SELECT)
 	"""
 	def __init__(self,base_string=None):
-		""" Initialise string value """
+		""" Initialise the string value """
 		if base_string == None:
 			self.query_string = ''
 		else:
 			self.query_string = str(base_string) + ' '
 		self.structure_type_checks = [list,tuple]
 		self.value_type_checks = [float,int,str,bool]
-	def mutate(self,string_value):
+	def __mutate__(self,string_value):
 		""" Mutate the current query string with a new string """
 		self.query_string = self.query_string + '%s ' % string_value
 		return True
-	def query(self,string_value=None):
-		""" Return the query, slicing off extra whitespace 
-		- must be sliced to allow for further text additions
-		"""
-		return self.query_string[0:len(self.query_string) - 1 ]
-	def forget(self,base_string=None):
-		""" Reset to a new starting point """
-		if base_string == None:
-			self.query_string = ''
-		else:
-			self.query_string = str(base_string) + ' '
-		return True
-	def values_generator(self,values,index_selection):
-		""" Extract the right data from data arrays """
+	def __values_generator__(self,values,index_selection):
+		""" Extract the right data from data arrays for VALUES sql command """
 		for key,value in values:
 			output = (key,value)
 			if type(output) == str and index_selection != 0:
@@ -69,46 +57,58 @@ class SQLStatement:
 				yield '"' + '%s' % output[index_selection] + '"'
 			else:
 				yield '%s' % output[index_selection]
-	def sql_select(self,key,value):
+	def __sql_select__(self,key,value):
 		""" SQL SELECT LOGIC """
-		self.mutate(key)
+		self.__mutate__(key)
 		if type(value) in self.structure_type_checks:
 			value_string = ', '.join(map(str,value))
-			self.mutate(value_string)
+			self.__mutate__(value_string)
 		elif type(value) in self.value_type_checks:
-			self.mutate(value)
+			self.__mutate__(value)
 		#else:
 		#	TYPE ERROR
-	def sql_values(self,key,value):
+	def __sql_values__(self,key,value):
 		""" SQL VALUES LOGIC """
 		if type(value) == dict:
-			name_string, value_string = tuple(', '.join([s for s in self.values_generator(value.items(),i)]) for i in range(0,2))
-			self.mutate( '(%s)' % name_string + ' %s ' % key + '(%s)' % value_string)
+			name_string, value_string = tuple(', '.join([s for s in self.__values_generator__(value.items(),i)]) for i in range(0,2))
+			self.__mutate__( '(%s)' % name_string + ' %s ' % key + '(%s)' % value_string)
 		elif type(value) in self.structure_type_checks:
-			name_string, value_string = tuple(', '.join([s for s in self.values_generator(value,i)]) for i in range(2))
-			self.mutate('(%s)' % name_string + ' %s ' % key + '(%s)' % value_string)
+			name_string, value_string = tuple(', '.join([s for s in self.__values_generator__(value,i)]) for i in range(2))
+			self.__mutate__('(%s)' % name_string + ' %s ' % key + '(%s)' % value_string)
 		elif type(value) in self.value_type_checks:
-			self.mutate(value)
+			self.__mutate__(value)
 		#else:
 		#	TYPE ERROR
-	def sql_where(self,key,value):
+	def __sql_where__(self,key,value):
 		""" SQL WHERE LOGIC - TODO INCOMPLETE!"""
-		self.mutate(key)
+		self.__mutate__(key)
 		if type(value) == dict:
 			value_string = ', '.join([str(k) + ' = ' + str(v) for k,v in value.items()])
-			self.mutate( value_string )
+			self.__mutate__( value_string )
 		elif type(value) in self.structure_type_checks:
 			value_string = ', '.join([str(k) + ' = ' + str(v) for k,v in value])
-			self.mutate( value_string )
+			self.__mutate__( value_string )
 		elif type(value) in self.value_type_checks:
-			self.mutate(value)
+			self.__mutate__(value)
 		#else:
 		#	TYPE ERROR
+	def query(self,string_value=None):
+		""" Return the query, slicing off extra whitespace 
+		- must be sliced to allow for further text additions
+		"""
+		return self.query_string[0:len(self.query_string) - 1 ]
+	def forget(self,base_string=None):
+		""" Start over with a new string """
+		if base_string == None:
+			self.query_string = ''
+		else:
+			self.query_string = str(base_string) + ' '
+		return True
 	def sql(self,text=None,**kwargs):
 		""" Run input data through checks and perform necessary actions """
 		if text is not None:
 			if type(text) in self.value_type_checks:
-				self.mutate(text)
+				self.__mutate__(text)
 			#else:
 			#	TYPE ERROR
 		else:
@@ -117,11 +117,11 @@ class SQLStatement:
 				if '_' in key:
 					key = key.split('_')[0] + ' ' + key.split('_')[1]
 				if key == 'SELECT':
-					self.sql_select(key,value)
+					self.__sql_select__(key,value)
 				elif key == 'VALUES':
-					self.sql_values(key,value)
+					self.__sql_values__(key,value)
 				elif key == 'WHERE':
-					self.sql_where(key,value)
+					self.__sql_where__(key,value)
 				else:
-					self.mutate(key)
-					self.mutate(value)
+					self.__mutate__(key)
+					self.__mutate__(value)
