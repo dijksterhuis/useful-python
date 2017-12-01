@@ -2,19 +2,26 @@ class SQLStatement:
 	"""
 	Object to handle bulding SQL queries from keyword argument/text inputs
 	---------------------------------------
-	Used like:
+	Usage:
 	>>> foo = SQLStatement()
 	>>> foo.query()
 	''
 	>>> foo.sql(INSERT_INTO= 'site_visits', VALUES = (('visit_id',1), ('site_url', 'http://example.com')))
 	>>> foo.query()
 	'INSERT INTO site_visits (visit_id, site_url) VALUES (1, http://example.com)'
-	>>> bar = SQLStatement('sql_query:')
-	>>> bar.sql(text = 'SELECT "*"')
-	>>> bar.sql(FROM = 'site_visits')
-	>>> bar.sql(VALUES = {'visit_id' : 1 ,  'site_url' : 'http://example.com'})
-	>>> bar.query()
-	'sql_query: INSERT INTO site_visits (visit_id, site_url) VALUES (1, http://example.com)'
+	>>> foo.forget('bar:')
+	True
+	>>> foo.query()
+	'bar:'
+	>>> foo.sql(text = 'SELECT "*"')
+	>>> foo.sql(FROM = 'site_visits')
+	>>> foo.sql(VALUES = {'visit_id' : 1 ,  'site_url' : 'http://example.com'})
+	>>> foo.query()
+	'bar: SELECT "*" FROM site_visits (visit_id, site_url) VALUES (1, http://example.com)'
+	>>> foo.forget()
+	True
+	>>> foo.query()
+	''
 	---------------------------------------
 	SQLStatement.sql('starting string') is used to initialise the query string.
 	Takes either:
