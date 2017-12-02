@@ -54,7 +54,7 @@ Object to buld text SQL queries from packed argument/text inputs
 - more SQL operations
 - Class methods -> `__missing__`, `__new__` (?)
 - `WHERE` SQL logic for `AND`s and `OR`s...?
-DONE - Refactor code: move from `**kwargs` -> `*args`
+- DONE - Refactor code: move from `**kwargs` -> `*args`
 
 ## UnitTester
 Object to collect results of unit tests (boolean only for now) and then `print()` results to `stdout`
