@@ -57,8 +57,8 @@ Object to buld text SQL queries from packed argument/text inputs
 - DONE - Refactor code: move from `**kwargs` -> `*args`
 
 ## UnitTester
-Object to collect results of unit tests (boolean only for now) and then `print()` results to `stdout`
-`See SQLStatement.unit_test()` for example usage.
+- Object to collect results of unit tests (boolean only for now) and then `print()` results to `stdout`
+- See `SQLStatement.unit_test()` for example usage.
 
 ## check_and_create_folders
 Arguments:
