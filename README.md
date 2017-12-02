@@ -58,7 +58,28 @@ Object to buld text SQL queries from packed argument/text inputs
 
 ## UnitTester
 - Object to collect results of unit tests (boolean only for now) and then `print()` results to `stdout`
-- See `SQLStatement.unit_test()` for example usage.
+Usage:
+```python
+>>> from UnitTester import UnitTester
+>>> test_results UnitTester()
+>>> # Test 1 = True
+>>> test_results.add_result( True )
+>>> # Test 2 = False
+>>> test_results.add_result( False )
+>>> # Test 2 = True
+>>> test_results.add_result( True )
+>>> test_results.output()
+
+2 of 3 tests successful
+
+Some tests failed, here are the results:
+
+    test 1 status: OK
+    test 2 status: FAIL
+    test 3 status: OK
+
+>>> 
+```
 
 ## check_and_create_folders
 Arguments:
