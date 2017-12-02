@@ -18,7 +18,7 @@ Object to buld text SQL queries from packed argument/text inputs
         - or a combination of both:
             - `(('INSERT INTO','table') , ('VALUES',{'everything':'nothing','site':'example.com' } ))`
             - `{'INSERT INTO':'table' , 'VALUES': (('everything','nothing'),('site','example.com' )) }`
-    - Text input using the text keyword argument:
+    - Text input using the `text` keyword argument:
         - `a.sql(text='SELECT (*)')`
 - Strings can be built iteratively, or in one go.
 - `a.query_get()` returns the string for assignment without popping the query.
