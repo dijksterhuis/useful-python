@@ -78,8 +78,26 @@ Some tests failed, here are the results:
     test 2 status: FAIL
     test 3 status: OK
 
+>>>
 ```
+The same object can be used more than once for different testing scenarios:
+```python
+>>> test_results.output(reset=True)
 
+2 of 3 tests successful
+
+Some tests failed, here are the results:
+
+    test 1 status: OK
+    test 2 status: FAIL
+    test 3 status: OK
+
+>>> test_results.output()
+
+No test results exist!
+
+>>> 
+```
 ## check_and_create_folders
 Arguments:
 ```python
