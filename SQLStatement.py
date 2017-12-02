@@ -47,7 +47,6 @@ def unit_test():
     test_results.add_result(a.query_get() == 'INSERT INTO table ')
     
     # Test 3
-    # --- Can fail due to dictionary ordering...!
     a.sql( {'VALUES':{'everything':'nothing','site':'example.com'}} )
     test_results.add_result(a.query_get() == 'INSERT INTO table (everything, site) VALUES (nothing, example.com) ' or a.query_get() == 'INSERT INTO table (site, everything) VALUES (example.com, nothing) ')
     
@@ -68,7 +67,6 @@ def unit_test():
     test_results.add_result(a.query_get() == 'INSERT INTO table ')
     
     # Test 8
-    # --- Can fail due to dictionary ordering...!
     a.sql( {'VALUES':{'everything':'nothing','site':'example.com'}} )
     test_results.add_result(a.query_get() == 'INSERT INTO table (everything, site) VALUES (nothing, example.com) ' or a.query_get() == 'INSERT INTO table (site, everything) VALUES (example.com, nothing) ')
     a.query_pop()
