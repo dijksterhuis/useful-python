@@ -129,10 +129,13 @@ class SQLBuilder:
     >>> print(a.query_get())
     ''
     ---------------------------------------
+    TODOs
+    ---------------------------------------
     TODO - more SQL operations
     TODO - Class methods -> missing, new (?)
     TODO - WHERE SQL logic for ANDs and ORs...?
     TODO DONE - Refactor code: move from **kwargs -> *args
+    ---------------------------------------
     """
     
     def __init__(self,base_string=None):
@@ -143,10 +146,12 @@ class SQLBuilder:
             self.query_string = str(base_string) + ' '
         self.structure_type_checks = set(i for i in [list,tuple,set])
         self.value_type_checks = set(i for i in [float,int,str,bool])
+    
     def __mutate__(self,string_value):
         """ Mutate the current query string with a new string """
         self.query_string = self.query_string + '%s ' % string_value
         return True
+    
     def __values_generator__(self,values,index_selection):
         """ Extract the right data from data types for VALUES sql command """
         if type(values) is dict:
@@ -160,6 +165,7 @@ class SQLBuilder:
                 yield '"' + '%s' % output[index_selection] + '"'
             else:
                 yield '%s' % output[index_selection]
+    
     def __sql_select__(self,k,v):
         """ SQL SELECT LOGIC """
         self.__mutate__(k)
@@ -170,6 +176,7 @@ class SQLBuilder:
             self.__mutate__(v)
         else:
             TypeError
+    
     def __sql_values__(self,k,v):
         """ SQL VALUES LOGIC """
         if type(v) in self.value_type_checks:
@@ -179,6 +186,7 @@ class SQLBuilder:
             self.__mutate__('(%s)' % name_string + ' %s ' % k + '(%s)' % value_string)
         else:
             TypeError
+    
     def __sql_where__(self,k,v):
         """ SQL WHERE LOGIC
         TODO - how to handle ANDS/ORS ?
@@ -191,11 +199,13 @@ class SQLBuilder:
             self.__mutate__( value_string )
         else:
             TypeError
+    
     def query_get(self):
         """ Return the query (slicing off extra whitespace (is it needed?!?!))
         - slicing chosen rather than stripping to allow further query clauses to be added
         """
         return self.query_string #[0:len(self.query_string) - 1 ]
+    
     def query_pop(self):
         """ Return the query then 'pop' (forget) the value 
         TODO - this is hacky!
@@ -203,6 +213,7 @@ class SQLBuilder:
         tmp = self.query_get()
         self.forget()
         return tmp
+    
     def forget(self,base_string=None):
         """ Start over with a new string """
         self.__init__(base_string)
@@ -211,6 +222,7 @@ class SQLBuilder:
         #else:
         #    self.query_string = str(base_string) + ' '
         return True
+    
     def sql(self,*args,text=None):
         """ Run input data through checks and perform necessary actions """
         if text is not None:
