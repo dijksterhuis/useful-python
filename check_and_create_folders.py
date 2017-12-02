@@ -12,7 +12,7 @@ def check_and_create_folders( folder_var , create_flag = False):
 		
 	elif type(folder_var) is list and create_flag is True:
 
-		if len(folder_var) > 1::
+		if len(folder_var) > 1:
 			for folder_path in folder_var:
 				if not os.path.exists(folder_path):
 					os.makedirs(folder_path)
