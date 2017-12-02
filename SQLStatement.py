@@ -167,11 +167,11 @@ class SQLBuilder:
     def __sql_select__(self,k,v):
         """ SQL SELECT LOGIC """
         self.__mutate__(k)
-        if type(v) in self.structure_type_checks:
+        if type(v) in self.value_type_checks:
+            self.__mutate__(v)
+        elif type(v) in self.structure_type_checks:
             value_string = ', '.join(map(str,v))
             self.__mutate__(value_string)
-        elif type(v) in self.value_type_checks:
-            self.__mutate__(v)
         else:
             TypeError
     
