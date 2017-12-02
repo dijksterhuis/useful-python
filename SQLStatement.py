@@ -67,7 +67,7 @@ class SQLBuilder:
             self.query_string = str(base_string) + ' '
         self.structure_type_checks = set(i for i in [list,tuple,set])
         self.value_type_checks = set(i for i in [float,int,str,bool])
-        self.function_list = { 'SELECT' : self.__SELECT__ , 'VALUES' : self.__VALUES__ , 'WHERE' : self.__WHERE__ , 'AND' : self.__WHERE__, 'OR' : self.__WHERE__ }
+        self.function_list = { 'SELECT' : self.__SELECT__ , 'VALUES' : self.__VALUES__ , 'WHERE' : self.__WHERE__ , 'AND' : self.__WHERE__ , 'OR' : self.__WHERE__ , 'NOT' : self.__WHERE__ }
     
     def __mutate__(self,string_value):
         """ Mutate the current query string with a new string """
@@ -185,8 +185,8 @@ def demo():
     a.sql( [['FROM','table_name']] )
     print(a.query_get())
     
-    print("a.sql( {'WHERE':(('everything','nothing'),('site','example.com'))} )")
-    a.sql( {'WHERE':(('everything','nothing'),('site','example.com'))} )
+    print("a.sql( {'WHERE':(('everything','nothing'),) , 'AND':(('site','example.com'),) } )")
+    a.sql( {'WHERE':(('everything','nothing'),) , 'AND':(('site','example.com'),) } )
     print(a.query_pop())
     
     print("a.sql( (('INSERT INTO','table'),) )")
@@ -226,8 +226,8 @@ def unit_test():
     test_results.add_result(a.query_get() == 'SELECT (*) FROM table_name ')
     
     # Test 6
-    a.sql( {'WHERE':(('everything','nothing'),('site','example.com'))} )
-    test_results.add_result(a.query_pop() == 'SELECT (*) FROM table_name WHERE everything = nothing, site = example.com ')
+    a.sql( {'WHERE':(('everything','nothing'),) , 'AND':(('site','example.com'),) } )
+    test_results.add_result(a.query_pop() == 'SELECT (*) FROM table_name WHERE everything = nothing AND site = example.com ')
     
     # Test 7
     a.sql( (('INSERT INTO','table'),) )

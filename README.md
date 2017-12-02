@@ -38,9 +38,9 @@ Object to buld text SQL queries from packed argument/text inputs
 >>> a.sql( [['FROM','table_name']] )
 >>> a.query_get()
 'SELECT (*) FROM table_name '
->>> a.sql( {'WHERE':(('everything','nothing'),('site','example.com'))} )
+>>> a.sql( {'WHERE':(('everything','nothing'),) , 'AND':(('site','example.com'),)})
 >>> a.query_get()
-'SELECT (*) FROM table_name WHERE everything = nothing, site = example.com '
+'SELECT (*) FROM table_name WHERE everything = nothing AND site = example.com  '
 >>> a.sql( (('INSERT INTO','table'),) )
 >>> a.query_get()
 'INSERT INTO table '
