@@ -98,7 +98,7 @@ class SQLBuilder:
     - Strings can be built iteratively, or in one go.
     - a.query_get() returns the string for assignment without popping the query.
     - a.query_pop() pops the string for assignment.
-    - a.delete(base_string=None) calls __init__.
+    - a.forget(base_string=None) calls __init__ and reinitialises the whole object.
     ---------------------------------------
     Usage
     ---------------------------------------
