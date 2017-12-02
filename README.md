@@ -11,7 +11,7 @@ Object to buld text SQL queries from packed argument/text inputs
         - dictionary of commands e.g.:
             - `{'SELECT' : '(*)' , 'FROM' : 'table' }`
         - **PLEASE NOTE** that dictionaries will *_not_* produce ordered arguments! e.g.
-            - 'FROM table_name SELECT (*) '
+            - `'FROM table_name SELECT (*) '`
         - nested tuples:
             - `(('INSERT INTO','table'),)`
             - `(('INSERT INTO','table') , ('VALUES',(('everything','nothing'),('site','example.com'))))`
