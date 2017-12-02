@@ -5,7 +5,7 @@ misc. useful python functions
 Object to buld text SQL queries from packed argument/text inputs
 
 ### INFO
-- `SQLBuilder(base_string=None)` is used to initialise the query string.
+- `a = SQLBuilder(base_string=None)` is used to initialise the query string.
 - `a.sql(_*args,text=None)` takes either:
     - packed argument parameters
         - dictionary of commands e.g.:
