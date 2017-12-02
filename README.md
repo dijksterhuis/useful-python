@@ -1,29 +1,29 @@
 # useful-python
 misc. useful python functions
 
-### SQLStatement.py
+## SQLStatement.py
 Object to buld text SQL queries from packed argument/text inputs
 
-#### INFO
+### INFO
 - `SQLBuilder(base_string=None)` is used to initialise the query string.
 - `a.sql(_*args,text=None)` takes either:
- - packed argument parameters
-  - dictionary of commands e.g.:
-   - `{'SELECT' : '(*)' , 'FROM' : 'table' }`
-  - nested tuples:
-   - `(('INSERT INTO','table'),)`
-   - `(('INSERT INTO','table') , ('VALUES',(('everything','nothing'),('site','example.com'))))`
-  - or a combination of both:
-   - `(('INSERT INTO','table') , ('VALUES',{'everything':'nothing','site':'example.com' } ))`
-   - `{'INSERT INTO':'table' , 'VALUES': (('everything','nothing'),('site','example.com' )) }`
-  - Text input using the text positional argument:
-   - `a.sql(text='SELECT (*)')`
+    - packed argument parameters
+        - dictionary of commands e.g.:
+            - `{'SELECT' : '(*)' , 'FROM' : 'table' }`
+        - nested tuples:
+            - `(('INSERT INTO','table'),)`
+            - `(('INSERT INTO','table') , ('VALUES',(('everything','nothing'),('site','example.com'))))`
+        - or a combination of both:
+            - `(('INSERT INTO','table') , ('VALUES',{'everything':'nothing','site':'example.com' } ))`
+            - `{'INSERT INTO':'table' , 'VALUES': (('everything','nothing'),('site','example.com' )) }`
+    - Text input using the text positional argument:
+        - `a.sql(text='SELECT (*)')`
 - Strings can be built iteratively, or in one go.
 - `a.query_get()` returns the string for assignment without popping the query.
 - `a.query_pop()` pops the string for assignment.
 - `a.forget(base_string=None)` calls `__init__` and reinitialises the whole object.
 
-#### Example Usage
+### Example Usage
 ```python
 >>> a = SQLBuilder()
 >>> a.sql( (('INSERT INTO','table'),) )
@@ -50,17 +50,17 @@ Object to buld text SQL queries from packed argument/text inputs
 >>> print(a.query_get())
 ''
 ```
-#### TODOs
+### TODOs
 - more SQL operations
 - Class methods -> `__missing__`, `__new__` (?)
 - `WHERE` SQL logic for `AND`s and `OR`s...?
 DONE - Refactor code: move from `**kwargs` -> `*args`
 
-### UnitTester
+## UnitTester
 Object to collect results of unit tests (boolean only for now) and then `print()` results to `stdout`
 `See SQLStatement.unit_test()` for example usage.
 
-### check_and_create_folders
+## check_and_create_folders
 Arguments:
 ```python
 check_and_create_folders( folder_var , create_flag = False)
@@ -70,7 +70,7 @@ check_and_create_folders( folder_var , create_flag = False)
 - Returns True if the function did something, False and an error message if it did not.
 - `create_flag = True` allows the function to create folders. Any other value will not.
 
-### recursive_dict_key_changes
+## recursive_dict_key_changes
 Arguments:
 ```python
 recursive_dict_pop(element,keys_tuple,new_key,start_counter=0)
