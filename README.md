@@ -61,7 +61,7 @@ Object to buld text SQL queries from packed argument/text inputs
 Usage:
 ```python
 >>> from UnitTester import UnitTester
->>> test_results UnitTester()
+>>> test_results = UnitTester()
 >>> # Test 1 = True
 >>> test_results.add_result( True )
 >>> # Test 2 = False
@@ -78,7 +78,6 @@ Some tests failed, here are the results:
     test 2 status: FAIL
     test 3 status: OK
 
->>> 
 ```
 
 ## check_and_create_folders
