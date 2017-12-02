@@ -177,7 +177,7 @@ def demo():
     a.sql( {'VALUES':{'everything':'nothing','site':'example.com'}} )
     print(a.query_get())
     
-    print("    a.forget('SELECT (*)')")
+    print("a.forget('SELECT (*)')")
     a.forget('SELECT (*)')
     print(a.query_get())
     
