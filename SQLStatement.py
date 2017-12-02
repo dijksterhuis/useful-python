@@ -144,7 +144,7 @@ class SQLBuilder:
             self.query_string = str(base_string) + ' '
         self.structure_type_checks = set(i for i in [list,tuple,set])
         self.value_type_checks = set(i for i in [float,int,str,bool])
-    
+        self.function_list = { 'SELECT' : self.__SELECT__ , 'VALUES' : self.__VALUES__ , 'WHERE' : self.__WHERE__ }
     def __mutate__(self,string_value):
         """ Mutate the current query string with a new string """
         self.query_string = self.query_string + '%s ' % string_value
@@ -164,39 +164,33 @@ class SQLBuilder:
             else:
                 yield '%s' % output[index_selection]
     
-    def __sql_select__(self,k,v):
-        """ SQL SELECT LOGIC """
-        self.__mutate__(k)
+    def __sql_clause_conditional_logic__(self,k,v):
         if type(v) in self.value_type_checks:
-            self.__mutate__(v)
-        elif type(v) in self.structure_type_checks:
-            value_string = ', '.join(map(str,v))
-            self.__mutate__(value_string)
-        else:
-            TypeError
-    
-    def __sql_values__(self,k,v):
-        """ SQL VALUES LOGIC """
-        if type(v) in self.value_type_checks:
+            self.__mutate__(k)
             self.__mutate__(v)
         elif type(v) in self.structure_type_checks or type(v) is dict:
-            name_string, value_string = tuple(', '.join([s for s in self.__values_generator__(v,i)]) for i in range(2))
-            self.__mutate__('(%s)' % name_string + ' %s ' % k + '(%s)' % value_string)
+            self.function_list[k](k,v)
         else:
             TypeError
-    
-    def __sql_where__(self,k,v):
+        
+    def __SELECT__(self,k,v):
+        """ SQL SELECT LOGIC """
+        self.__mutate__(k)
+        value_string = ', '.join(map(str,v))
+        self.__mutate__(value_string)
+        
+    def __VALUES__(self,k,v):
+        """ SQL SELECT LOGIC """
+        name_string, value_string = tuple(', '.join([s for s in self.__values_generator__(v,i)]) for i in range(2))
+        self.__mutate__('(%s)' % name_string + ' %s ' % k + '(%s)' % value_string)
+        
+    def __WHERE__(self,k,v):
         """ SQL WHERE LOGIC
         TODO - how to handle ANDS/ORS ?
         """
         self.__mutate__(k)
-        if type(v) in self.value_type_checks:
-            self.__mutate__(v)
-        elif type(v) in self.structure_type_checks or type(v) is dict:
-            value_string = ', '.join([str(x) + ' = ' + str(y) for x,y in v])
-            self.__mutate__( value_string )
-        else:
-            TypeError
+        value_string = ', '.join([str(x) + ' = ' + str(y) for x,y in v])
+        self.__mutate__( value_string )
     
     def query_get(self):
         """ Return the query (slicing off extra whitespace (is it needed?!?!))
@@ -240,12 +234,14 @@ class SQLBuilder:
                 key = k.upper()
                 if '_' in key:
                     key = '%s %s' % tuple('hello_world'.split('_'))
-                if key == 'SELECT':
-                    self.__sql_select__(key,value)
-                elif key == 'VALUES':
-                    self.__sql_values__(key,value)
-                elif key == 'WHERE':
-                    self.__sql_where__(key,value)
+                if key in self.function_list.keys():
+                    self.__sql_clause_conditional_logic__(key,value)
                 else:
                     self.__mutate__(key)
                     self.__mutate__(value)
+                #if key == 'SELECT':
+                #    self.__sql_select__(key,value)
+                #elif key == 'VALUES':
+                #    self.__sql_values__(key,value)
+                #elif key == 'WHERE':
+                #    self.__sql_where__(key,value)
