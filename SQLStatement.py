@@ -106,20 +106,27 @@ class SQLBuilder:
     ---------------------------------------
     >>> a = SQLBuilder()
     >>> a.sql( (('INSERT INTO','table'),) )
+    >>> a.query_get()
     'INSERT INTO table '
     >>> a.sql( {'VALUES':{'everything':'nothing','site':'example.com'}} )
+    >>> a.query_get()
     'INSERT INTO table (everything, site) VALUES (nothing, example.com) '
     >>> a.forget('SELECT (*)')
+    >>> a.query_get()
     'SELECT (*) '
     >>> a.sql( [['FROM','table_name']] )
+    >>> a.query_get()
     'SELECT (*) FROM table_name '
     >>> a.sql( {'WHERE':(('everything','nothing'),('site','example.com'))} )
+    >>> a.query_get()
     'SELECT (*) FROM table_name WHERE everything = nothing, site = example.com '
     >>> a.sql( (('INSERT INTO','table'),) )
+    >>> a.query_get()
     'INSERT INTO table '
     >>> a.sql( {'VALUES':{'everything':'nothing','site':'example.com'}} )
+    >>> a.query_pop()
     'INSERT INTO table (everything, site) VALUES (nothing, example.com) '
-    >>> print(a.query_pop())
+    >>> print(a.query_get())
     ''
     ---------------------------------------
     TODO - more SQL operations
