@@ -27,13 +27,13 @@ Object to buld text SQL queries from packed argument/text inputs
 
 ### Example Usage
 ```python
->>> a = SQLBuilder()
+>>> a = SQLBuilder('my_query:')
 >>> a.sql( (('INSERT INTO','table'),) )
 >>> a.query_get()
-'INSERT INTO table '
+'my_query: INSERT INTO table '
 >>> a.sql( {'VALUES':{'everything':'nothing','site':'example.com'}} )
 >>> a.query_get()
-'INSERT INTO table (everything, site) VALUES (nothing, example.com) '
+'my_query: INSERT INTO table (everything, site) VALUES (nothing, example.com) '
 >>> a.forget('SELECT (*)')
 >>> a.query_get()
 'SELECT (*) '
@@ -49,7 +49,7 @@ Object to buld text SQL queries from packed argument/text inputs
 >>> a.sql( {'VALUES':{'everything':'nothing','site':'example.com'}} )
 >>> a.query_pop()
 'INSERT INTO table (everything, site) VALUES (nothing, example.com) '
->>> print(a.query_get())
+>>> a.query_get()
 ''
 ```
 ### TODOs
