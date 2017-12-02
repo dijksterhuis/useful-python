@@ -67,7 +67,7 @@ class SQLBuilder:
             self.query_string = str(base_string) + ' '
         self.structure_type_checks = set(i for i in [list,tuple,set])
         self.value_type_checks = set(i for i in [float,int,str,bool])
-        self.function_list = { 'SELECT' : self.__SELECT__ , 'VALUES' : self.__VALUES__ , 'WHERE' : self.__WHERE__ }
+        self.function_list = { 'SELECT' : self.__SELECT__ , 'VALUES' : self.__VALUES__ , 'WHERE' : self.__WHERE__ , 'AND' : self.__WHERE__, 'OR' : self.__WHERE__ }
     
     def __mutate__(self,string_value):
         """ Mutate the current query string with a new string """
