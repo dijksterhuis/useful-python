@@ -1,80 +1,3 @@
-from UnitTester import UnitTester
-
-def demo():
-    print("a = SQLBuilder()")
-    a = SQLBuilder()
-    print(a.query_get())
-    
-    print("a.sql( (('INSERT INTO','table'),) )")
-    a.sql( (('INSERT INTO','table'),) )
-    print(a.query_get())
-    
-    print("a.sql( {'VALUES':{'everything':'nothing','site':'example.com'}} )")
-    a.sql( {'VALUES':{'everything':'nothing','site':'example.com'}} )
-    print(a.query_get())
-    
-    print("    a.forget('SELECT (*)')")
-    a.forget('SELECT (*)')
-    print(a.query_get())
-    
-    print("a.sql( [['FROM','table_name']] )")
-    a.sql( [['FROM','table_name']] )
-    print(a.query_get())
-    
-    print("a.sql( {'WHERE':(('everything','nothing'),('site','example.com'))} )")
-    a.sql( {'WHERE':(('everything','nothing'),('site','example.com'))} )
-    print(a.query_pop())
-    
-    print("a.sql( (('INSERT INTO','table'),) )")
-    a.sql( (('INSERT INTO','table'),) )
-    print(a.query_get())
-    
-    print("a.sql( {'VALUES':{'everything':'nothing','site':'example.com'}} )")
-    a.sql( {'VALUES':{'everything':'nothing','site':'example.com'}} )
-    print(a.query_pop())
-    
-    print("print(a.query_pop())")
-    print(a.query_get())
-    
-def unit_test():
-    a, test_results = SQLBuilder(), UnitTester()
-    
-    # Test 1
-    test_results.add_result( a.query_get() == '')
-    
-    # Test 2
-    a.sql( (('INSERT INTO','table'),) )
-    test_results.add_result(a.query_get() == 'INSERT INTO table ')
-    
-    # Test 3
-    a.sql( {'VALUES':{'everything':'nothing','site':'example.com'}} )
-    test_results.add_result(a.query_get() == 'INSERT INTO table (everything, site) VALUES (nothing, example.com) ' or a.query_get() == 'INSERT INTO table (site, everything) VALUES (example.com, nothing) ')
-    
-    # Test 4
-    a.forget('SELECT (*)')
-    test_results.add_result(a.query_get() == 'SELECT (*) ')
-    
-    # Test 5
-    a.sql( [['FROM','table_name']] )
-    test_results.add_result(a.query_get() == 'SELECT (*) FROM table_name ')
-    
-    # Test 6
-    a.sql( {'WHERE':(('everything','nothing'),('site','example.com'))} )
-    test_results.add_result(a.query_pop() == 'SELECT (*) FROM table_name WHERE everything = nothing, site = example.com ')
-    
-    # Test 7
-    a.sql( (('INSERT INTO','table'),) )
-    test_results.add_result(a.query_get() == 'INSERT INTO table ')
-    
-    # Test 8
-    a.sql( {'VALUES':{'everything':'nothing','site':'example.com'}} )
-    test_results.add_result(a.query_get() == 'INSERT INTO table (everything, site) VALUES (nothing, example.com) ' or a.query_get() == 'INSERT INTO table (site, everything) VALUES (example.com, nothing) ')
-    a.query_pop()
-    
-    # Test 9
-    test_results.add_result(a.query_get() == '')
-    test_results.output()
-    
 class SQLBuilder:
     """
     ==================================================================
@@ -145,6 +68,7 @@ class SQLBuilder:
         self.structure_type_checks = set(i for i in [list,tuple,set])
         self.value_type_checks = set(i for i in [float,int,str,bool])
         self.function_list = { 'SELECT' : self.__SELECT__ , 'VALUES' : self.__VALUES__ , 'WHERE' : self.__WHERE__ }
+    
     def __mutate__(self,string_value):
         """ Mutate the current query string with a new string """
         self.query_string = self.query_string + '%s ' % string_value
@@ -172,18 +96,18 @@ class SQLBuilder:
             self.function_list[k](k,v)
         else:
             TypeError
-        
+    
     def __SELECT__(self,k,v):
         """ SQL SELECT LOGIC """
         self.__mutate__(k)
         value_string = ', '.join(map(str,v))
         self.__mutate__(value_string)
-        
+    
     def __VALUES__(self,k,v):
         """ SQL SELECT LOGIC """
         name_string, value_string = tuple(', '.join([s for s in self.__values_generator__(v,i)]) for i in range(2))
         self.__mutate__('(%s)' % name_string + ' %s ' % k + '(%s)' % value_string)
-        
+    
     def __WHERE__(self,k,v):
         """ SQL WHERE LOGIC
         TODO - how to handle ANDS/ORS ?
@@ -239,9 +163,82 @@ class SQLBuilder:
                 else:
                     self.__mutate__(key)
                     self.__mutate__(value)
-                #if key == 'SELECT':
-                #    self.__sql_select__(key,value)
-                #elif key == 'VALUES':
-                #    self.__sql_values__(key,value)
-                #elif key == 'WHERE':
-                #    self.__sql_where__(key,value)
+
+def demo():
+    print("a = SQLBuilder()")
+    a = SQLBuilder()
+    print(a.query_get())
+    
+    print("a.sql( (('INSERT INTO','table'),) )")
+    a.sql( (('INSERT INTO','table'),) )
+    print(a.query_get())
+    
+    print("a.sql( {'VALUES':{'everything':'nothing','site':'example.com'}} )")
+    a.sql( {'VALUES':{'everything':'nothing','site':'example.com'}} )
+    print(a.query_get())
+    
+    print("    a.forget('SELECT (*)')")
+    a.forget('SELECT (*)')
+    print(a.query_get())
+    
+    print("a.sql( [['FROM','table_name']] )")
+    a.sql( [['FROM','table_name']] )
+    print(a.query_get())
+    
+    print("a.sql( {'WHERE':(('everything','nothing'),('site','example.com'))} )")
+    a.sql( {'WHERE':(('everything','nothing'),('site','example.com'))} )
+    print(a.query_pop())
+    
+    print("a.sql( (('INSERT INTO','table'),) )")
+    a.sql( (('INSERT INTO','table'),) )
+    print(a.query_get())
+    
+    print("a.sql( {'VALUES':{'everything':'nothing','site':'example.com'}} )")
+    a.sql( {'VALUES':{'everything':'nothing','site':'example.com'}} )
+    print(a.query_pop())
+    
+    print("print(a.query_pop())")
+    print(a.query_get())
+
+def unit_test():
+    
+    from UnitTester import UnitTester
+    
+    a, test_results = SQLBuilder(), UnitTester()
+    
+    # Test 1
+    test_results.add_result( a.query_get() == '')
+    
+    # Test 2
+    a.sql( (('INSERT INTO','table'),) )
+    test_results.add_result(a.query_get() == 'INSERT INTO table ')
+    
+    # Test 3
+    a.sql( {'VALUES':{'everything':'nothing','site':'example.com'}} )
+    test_results.add_result(a.query_get() == 'INSERT INTO table (everything, site) VALUES (nothing, example.com) ' or a.query_get() == 'INSERT INTO table (site, everything) VALUES (example.com, nothing) ')
+    
+    # Test 4
+    a.forget('SELECT (*)')
+    test_results.add_result(a.query_get() == 'SELECT (*) ')
+    
+    # Test 5
+    a.sql( [['FROM','table_name']] )
+    test_results.add_result(a.query_get() == 'SELECT (*) FROM table_name ')
+    
+    # Test 6
+    a.sql( {'WHERE':(('everything','nothing'),('site','example.com'))} )
+    test_results.add_result(a.query_pop() == 'SELECT (*) FROM table_name WHERE everything = nothing, site = example.com ')
+    
+    # Test 7
+    a.sql( (('INSERT INTO','table'),) )
+    test_results.add_result(a.query_get() == 'INSERT INTO table ')
+    
+    # Test 8
+    a.sql( {'VALUES':{'everything':'nothing','site':'example.com'}} )
+    test_results.add_result(a.query_get() == 'INSERT INTO table (everything, site) VALUES (nothing, example.com) ' or a.query_get() == 'INSERT INTO table (site, everything) VALUES (example.com, nothing) ')
+    a.query_pop()
+    
+    # Test 9
+    test_results.add_result(a.query_get() == '')
+    test_results.output()
+
