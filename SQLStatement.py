@@ -1,62 +1,7 @@
 class SQLBuilder:
     """
-    ==================================================================
-    Object to buld text SQL queries from packed argument/text inputs
-    ==================================================================
-    INFO
-    ---------------------------------------
-    SQLBuilder('starting string') is used to initialise the query string.
-    - Takes either:
-        - packed argument parameters
-            - dictionary of commands e.g.:
-                 - {'SELECT' : '(*)' , 'FROM' : 'table' }
-            - nested tuples:
-                - (('INSERT INTO','table'),)
-                - (('INSERT INTO','table') , ('VALUES',(('everything','nothing'),('site','example.com'))))
-            - or a combination of both:
-                - (('INSERT INTO','table') , ('VALUES',{'everything':'nothing','site':'example.com' } ))
-                - {'INSERT INTO':'table' , 'VALUES': (('everything','nothing'),('site','example.com' )) }
-        - Text input using the text positional argument:
-            - a.sql(text='SELECT (*)')
-    - Strings can be built iteratively, or in one go.
-    - a.query_get() returns the string for assignment without popping the query.
-    - a.query_pop() pops the string for assignment.
-    - a.forget(base_string=None) calls __init__ and reinitialises the whole object.
-    ---------------------------------------
-    Usage
-    ---------------------------------------
-    >>> a = SQLBuilder()
-    >>> a.sql( (('INSERT INTO','table'),) )
-    >>> a.query_get()
-    'INSERT INTO table '
-    >>> a.sql( {'VALUES':{'everything':'nothing','site':'example.com'}} )
-    >>> a.query_get()
-    'INSERT INTO table (everything, site) VALUES (nothing, example.com) '
-    >>> a.forget('SELECT (*)')
-    >>> a.query_get()
-    'SELECT (*) '
-    >>> a.sql( [['FROM','table_name']] )
-    >>> a.query_get()
-    'SELECT (*) FROM table_name '
-    >>> a.sql( {'WHERE':(('everything','nothing'),('site','example.com'))} )
-    >>> a.query_get()
-    'SELECT (*) FROM table_name WHERE everything = nothing, site = example.com '
-    >>> a.sql( (('INSERT INTO','table'),) )
-    >>> a.query_get()
-    'INSERT INTO table '
-    >>> a.sql( {'VALUES':{'everything':'nothing','site':'example.com'}} )
-    >>> a.query_pop()
-    'INSERT INTO table (everything, site) VALUES (nothing, example.com) '
-    >>> print(a.query_get())
-    ''
-    ---------------------------------------
-    TODOs
-    ---------------------------------------
-    TODO - more SQL operations
-    TODO - Class methods -> missing, new (?)
-    TODO - WHERE SQL logic for ANDs and ORs...?
-    TODO DONE - Refactor code: move from **kwargs -> *args
-    ---------------------------------------
+    Object to buld text SQL queries from dict, packed sequences or text inputs
+    For usage, go here: https://github.com/dijksterhuis/useful-python
     """
     
     def __init__(self,base_string=None):
